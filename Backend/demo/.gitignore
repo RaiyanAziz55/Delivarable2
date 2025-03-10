@@ -1,0 +1,85 @@
+HELP.md
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+
+### 1️⃣ Ignore Java & IDE files ###
+*.class
+*.jar
+*.war
+*.ear
+*.iml
+*.log
+
+### 2️⃣ Ignore Build & Dependency files ###
+/target/
+/build/
+/bin/
+/out/
+/mvnw
+/mvnw.cmd
+/.mvn/
+!mvnw
+!mvnw.cmd
+
+### 3️⃣ Ignore IntelliJ IDEA files ###
+.idea/
+*.iws
+*.ipr
+*.iml
+
+### 4️⃣ Ignore Eclipse IDE files ###
+.project
+.classpath
+.settings/
+
+### 5️⃣ Ignore VS Code files ###
+.vscode/
+
+### 6️⃣ Ignore OS & Editor Config Files ###
+.DS_Store
+Thumbs.db
+
+### 7️⃣ Ignore Database & Credentials ###
+/*.env
+/.env
+.env
+application.properties
+application.yml
+application-local.properties
+application-test.properties
+
+### 8️⃣ Ignore Logs & Generated Files ###
+logs/
+*.log
+hs_err_pid*
