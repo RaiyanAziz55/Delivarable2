@@ -178,3 +178,297 @@ AFTER INSERT OR UPDATE ON Employee
 FOR EACH ROW
 WHEN (NEW.manager = true)
 EXECUTE FUNCTION public.update_hotel_manager();
+
+
+
+INSERT INTO Renting (booking_id, date_in, date_out, payment, employee_id, room_id, cust_id)
+VALUES 
+(1, CURRENT_TIMESTAMP, NULL, 1200.00, 2, 1, 1);
+
+INSERT INTO Booking (check_in_date, check_out_date, booking_date, status, room_id, cust_id, employee_id)
+VALUES 
+('2025-04-01', '2025-04-05', CURRENT_TIMESTAMP, 'confirmed', 1, 1, 2);
+
+INSERT INTO Customer (full_name, address, phone, email, reg_date)
+VALUES
+  ('Charlie Customer', '789 Customer Ave, City X', '999-111-2222', 'charlie@example.com', '2024-01-15'),
+  ('Dana Customer', '101 Customer Blvd, City Y', '999-333-4444', 'dana@example.com', '2024-02-20'),
+  ('Eli Customer', '202 Customer Rd, City Z', '999-555-6666', 'eli@example.com', '2024-03-05');
+
+-- Insert a manager for hotel_id = 1
+INSERT INTO Employee (full_name, address, phone, email, password, role, manager, hotel_id)
+VALUES 
+  ('Alice Manager', '101 Manager Ave, City A', '111-555-0101', 'alice.manager@luxurystay.com', 'hashedpass1', 'Manager', TRUE, 1);
+
+-- Insert additional staff for hotel_id = 1
+INSERT INTO Employee (full_name, address, phone, email, password, role, manager, hotel_id)
+VALUES 
+  ('Bob Staff', '102 Staff St, City A', '111-555-0202', 'bob.staff@luxurystay.com', 'hashedpass2', 'Front Desk', FALSE, 1),
+  ('Carol Housekeeper', '103 Housekeeping Rd, City A', '111-555-0303', 'carol.house@luxurystay.com', 'hashedpass3', 'Housekeeping', FALSE, 1);
+
+-- Insert amenities for room_id 1 (e.g., "Luxury Stay Downtown", room '101')
+INSERT INTO Amenities (wifi, ac, pool, gym, spa, parking, fridge, coffee, room_id)
+VALUES 
+  (TRUE, TRUE, TRUE, FALSE, FALSE, TRUE, TRUE, TRUE, 1);
+
+-- Insert amenities for room_id 2 (e.g., "Luxury Stay Downtown", room '102')
+INSERT INTO Amenities (wifi, ac, pool, gym, spa, parking, fridge, coffee, room_id)
+VALUES 
+  (TRUE, TRUE, FALSE, TRUE, FALSE, TRUE, TRUE, FALSE, 2);
+
+-- Insert amenities for room_id 3 (e.g., "Luxury Stay Downtown", room '103')
+INSERT INTO Amenities (wifi, ac, pool, gym, spa, parking, fridge, coffee, room_id)
+VALUES 
+  (TRUE, FALSE, TRUE, FALSE, TRUE, TRUE, TRUE, TRUE, 3);
+
+INSERT INTO Room (room_number, price, capacity, extended, problems, hotel_id)
+VALUES
+  ('101', 250.00, 'single', FALSE, NULL, 1),
+  ('102', 300.00, 'double', TRUE, NULL, 1),
+  ('103', 350.00, 'suite', FALSE, NULL, 1),
+  ('104', 200.00, 'family', TRUE, NULL, 1),
+  ('105', 275.00, 'deluxe', FALSE, NULL, 1);
+
+INSERT INTO Hotel (name, address, phone, category, star_count, chain_id, manager_id)
+VALUES
+  ('Luxury Stay Downtown', 'Downtown, City A', '111-000-1111', 'Luxury', 5, 1, NULL),
+  ('Luxury Stay Uptown', 'Uptown, City A', '111-000-2222', 'Luxury', 5, 1, NULL),
+  ('Luxury Stay Suburb', 'Suburb, City A', '111-000-3333', 'Mid-range', 4, 1, NULL),
+  ('Luxury Stay Riverside', 'Riverside, City A', '111-000-4444', 'Luxury', 5, 1, NULL),
+  ('Luxury Stay Airport', 'Airport, City A', '111-000-5555', 'Budget', 3, 1, NULL),
+  ('Luxury Stay Seaside', 'Seaside, City A', '111-000-6666', 'Luxury', 5, 1, NULL),
+  ('Luxury Stay Plaza', 'Downtown, City A', '111-000-7777', 'Mid-range', 4, 1, NULL),
+  ('Luxury Stay Central', 'Central, City A', '111-000-8888', 'Budget', 3, 1, NULL);
+
+INSERT INTO Hotel (name, address, phone, category, star_count, chain_id, manager_id)
+VALUES
+  ('Budget Inn City Center', 'City Center, City B', '222-100-1111', 'Budget', 3, 2, NULL),
+  ('Budget Inn West End', 'West End, City B', '222-100-2222', 'Budget', 3, 2, NULL),
+  ('Budget Inn Suburban', 'Suburb, City B', '222-100-3333', 'Budget', 3, 2, NULL),
+  ('Budget Inn East Side', 'East Side, City B', '222-100-4444', 'Mid-range', 4, 2, NULL),
+  ('Budget Inn Uptown', 'Uptown, City B', '222-100-5555', 'Budget', 3, 2, NULL),
+  ('Budget Inn Downtown', 'Downtown, City B', '222-100-6666', 'Mid-range', 4, 2, NULL),
+  ('Budget Inn Airport', 'Airport, City B', '222-100-7777', 'Budget', 3, 2, NULL),
+  ('Budget Inn Plaza', 'City Center, City B', '222-100-8888', 'Mid-range', 4, 2, NULL);
+
+INSERT INTO Hotel (name, address, phone, category, star_count, chain_id, manager_id)
+VALUES
+  ('Comfort Hotel Grand', 'Central, City C', '333-200-1111', 'Luxury', 5, 3, NULL),
+  ('Comfort Hotel Classic', 'Old Town, City C', '333-200-2222', 'Mid-range', 4, 3, NULL),
+  ('Comfort Hotel Riverside', 'Riverside, City C', '333-200-3333', 'Luxury', 5, 3, NULL),
+  ('Comfort Hotel Green', 'Suburb, City C', '333-200-4444', 'Budget', 3, 3, NULL),
+  ('Comfort Hotel Plaza', 'Central, City C', '333-200-5555', 'Mid-range', 4, 3, NULL),
+  ('Comfort Hotel Executive', 'Business District, City C', '333-200-6666', 'Luxury', 5, 3, NULL),
+  ('Comfort Hotel Basic', 'Outskirts, City C', '333-200-7777', 'Budget', 3, 3, NULL),
+  ('Comfort Hotel Elite', 'Central, City C', '333-200-8888', 'Luxury', 5, 3, NULL);
+
+INSERT INTO Hotel (name, address, phone, category, star_count, chain_id, manager_id)
+VALUES
+  ('Business Suite Prime', 'Downtown, City D', '444-300-1111', 'Luxury', 5, 4, NULL),
+  ('Business Suite Economy', 'Suburb, City D', '444-300-2222', 'Budget', 3, 4, NULL),
+  ('Business Suite Corporate', 'Business District, City D', '444-300-3333', 'Mid-range', 4, 4, NULL),
+  ('Business Suite Executive', 'Downtown, City D', '444-300-4444', 'Luxury', 5, 4, NULL),
+  ('Business Suite Conference', 'Convention Center, City D', '444-300-5555', 'Mid-range', 4, 4, NULL),
+  ('Business Suite Standard', 'Uptown, City D', '444-300-6666', 'Budget', 3, 4, NULL),
+  ('Business Suite Deluxe', 'Downtown, City D', '444-300-7777', 'Luxury', 5, 4, NULL),
+  ('Business Suite Residence', 'Suburb, City D', '444-300-8888', 'Mid-range', 4, 4, NULL);
+
+INSERT INTO Hotel (name, address, phone, category, star_count, chain_id, manager_id)
+VALUES
+  ('Family Resort Paradise', 'Beachside, City E', '555-400-1111', 'Luxury', 5, 5, NULL),
+  ('Family Resort Cozy', 'Countryside, City E', '555-400-2222', 'Budget', 3, 5, NULL),
+  ('Family Resort Fun', 'City Center, City E', '555-400-3333', 'Mid-range', 4, 5, NULL),
+  ('Family Resort Lakeside', 'Lakeside, City E', '555-400-4444', 'Luxury', 5, 5, NULL),
+  ('Family Resort Hills', 'Hillside, City E', '555-400-5555', 'Mid-range', 4, 5, NULL),
+  ('Family Resort Urban', 'Downtown, City E', '555-400-6666', 'Budget', 3, 5, NULL),
+  ('Family Resort Grand', 'Beachside, City E', '555-400-7777', 'Luxury', 5, 5, NULL),
+  ('Family Resort Classic', 'City Center, City E', '555-400-8888', 'Mid-range', 4, 5, NULL);
+
+  INSERT INTO HotelChain (name, address, phone, chain_number)
+VALUES 
+  ('Luxury Stay', '123 Luxury Ave, City A', '111-222-3333', 'LS001'),
+  ('Budget Inn', '456 Budget St, City B', '222-333-4444', 'BI002'),
+  ('Comfort Hotels', '789 Comfort Rd, City C', '333-444-5555', 'CH003'),
+  ('Business Suites', '101 Business Blvd, City D', '444-555-6666', 'BS004'),
+  ('Family Resorts', '202 Family Lane, City E', '555-666-7777', 'FR005');
+
+
+Queries:
+Query 1: Aggregation Query – Count of Rooms per Hotel
+
+This query shows the total number of rooms for each hotel. It joins the Hotel and Room tables and groups by hotel name.
+
+sql
+Copy
+SELECT H.name AS hotel_name, COUNT(R.room_id) AS total_rooms
+FROM Hotel H
+LEFT JOIN Room R ON H.HID = R.hotel_id
+GROUP BY H.name;
+
+
+Query 2: Nested Query – List Customers Without Any Bookings
+
+This query retrieves the names and emails of customers who have not made any bookings.
+
+SELECT full_name, email
+FROM Customer
+WHERE cust_id NOT IN (
+    SELECT cust_id FROM Booking
+);
+
+Query 3: Nested Query with Joins – Retrieve Bookings for a Specific Hotel Chain
+
+This query gets booking details (including the booking dates, customer name, and hotel name) for hotels that belong to a specific chain (here, "Luxury Stay").
+It uses a nested subquery in the WHERE clause to filter on the chain's ID.
+
+SELECT B.booking_id, B.check_in_date, B.check_out_date, C.full_name AS customer_name, H.name AS hotel_name
+FROM Booking B
+JOIN Customer C ON B.cust_id = C.cust_id
+JOIN Room R ON B.room_id = R.room_id
+JOIN Hotel H ON R.hotel_id = H.HID
+WHERE H.chain_id = (
+    SELECT HCID FROM HotelChain WHERE name = 'Luxury Stay'
+);
+
+Query 4: Nested Query – List Available Rooms for Today
+
+This query lists rooms (with their numbers, prices, and associated hotel names) that are available today by ensuring they’re not part of any active booking.
+
+SELECT R.room_number, R.price, H.name AS hotel_name
+FROM Room R
+JOIN Hotel H ON R.hotel_id = H.HID
+WHERE R.room_id NOT IN (
+    SELECT B.room_id
+    FROM Booking B
+    WHERE CURRENT_DATE BETWEEN B.check_in_date AND B.check_out_date
+);
+
+
+
+Trigger 1: Prevent Double Booking
+Purpose:
+This trigger runs before a new booking is inserted into the Booking table. It checks whether there is an overlapping booking for the same room. If there is, it raises an exception, thereby preventing the insert.
+
+Code:
+CREATE OR REPLACE FUNCTION prevent_double_booking()
+RETURNS trigger
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    -- Check if the room is already booked for overlapping dates
+    IF EXISTS (
+        SELECT 1 FROM Booking
+        WHERE room_id = NEW.room_id
+          AND NEW.check_in_date < check_out_date
+          AND NEW.check_out_date > check_in_date
+    ) THEN
+        RAISE EXCEPTION 'Room % is already booked for the given dates', NEW.room_id;
+    END IF;
+    RETURN NEW;
+END;
+$$;
+
+CREATE TRIGGER trg_prevent_double_booking
+BEFORE INSERT ON Booking
+FOR EACH ROW
+EXECUTE FUNCTION prevent_double_booking();
+
+Trigger 2: Auto Convert Booking to Renting
+Purpose:
+This trigger fires after an update on the Booking table. When a booking's status is changed to 'checked_in', the trigger automatically creates a corresponding record in the Renting table. This automates the process of converting a booking into an active renting when the customer checks in.
+
+Code:
+CREATE OR REPLACE FUNCTION booking_to_renting()
+RETURNS trigger
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    -- Check if the booking status has changed to 'checked_in'
+    IF NEW.status = 'checked_in' AND (OLD.status IS DISTINCT FROM NEW.status) THEN
+        INSERT INTO Renting (booking_id, date_in, employee_id, room_id, cust_id, payment)
+        VALUES (NEW.booking_id, CURRENT_TIMESTAMP, NEW.employee_id, NEW.room_id, NEW.cust_id, 0);
+    END IF;
+    RETURN NEW;
+END;
+$$;
+
+CREATE TRIGGER trg_booking_to_renting
+AFTER UPDATE ON Booking
+FOR EACH ROW
+WHEN (NEW.status = 'checked_in')
+EXECUTE FUNCTION booking_to_renting();
+
+
+2. Index on Booking for Room Date Ranges
+Create an index on the Booking table on the room_id, check_in_date, and check_out_date columns:
+
+sql
+Copy
+CREATE INDEX idx_booking_room_dates
+ON Booking (room_id, check_in_date, check_out_date);
+Justification:
+
+Purpose: Speeds up queries that check room availability or search for overlapping bookings.
+Query Impact: When you run queries to determine if a room is available for a given date range—such as when inserting a new booking or checking for conflicts—this index makes it faster to filter bookings by room and date.
+Expected Usage: This index is especially useful in the trigger function that prevents double booking, and in any reporting queries that need to join or filter bookings by room and date range.
+3. Index on Room for Hotel Lookups
+Create an index on the Room table on the hotel_id column:
+
+sql
+Copy
+CREATE INDEX idx_room_hotel_id
+ON Room (hotel_id);
+Justification:
+
+Purpose: Accelerates joins between the Room and Hotel tables.
+Query Impact: Many queries will retrieve room details for a given hotel or join Room to Hotel (e.g., when listing available rooms per hotel, or aggregating room data for a specific hotel).
+Expected Usage: This index helps speed up these join operations, ensuring that queries filtering on hotel_id in the Room table run efficiently.
+
+
+View 1: Available Rooms per Area
+This view calculates the number of rooms that are available today (i.e., not currently booked) grouped by the hotel's address (which we treat as the "area"). It joins the Hotel and Room tables, then excludes rooms with active bookings on the current date.
+
+sql
+Copy
+CREATE VIEW AvailableRoomsPerArea AS
+SELECT H.address AS area,
+       COUNT(R.room_id) AS available_rooms
+FROM Hotel H
+JOIN Room R ON H.HID = R.hotel_id
+WHERE R.room_id NOT IN (
+    SELECT B.room_id
+    FROM Booking B
+    WHERE CURRENT_DATE BETWEEN B.check_in_date AND B.check_out_date
+)
+GROUP BY H.address;
+Explanation:
+
+Join: Links each room to its hotel to access the area (address).
+Subquery Filter: Excludes rooms that are booked today.
+Group By: Aggregates the count of available rooms per area.
+View 2: Aggregated Capacity per Hotel
+This view sums a numeric representation of the room capacity for each hotel. Since the capacity column is stored as text (e.g., 'single', 'double', etc.), we use a CASE expression to map each capacity type to a numeric value. (You may adjust the mapping according to your project's requirements.)
+
+sql
+Copy
+CREATE VIEW HotelTotalCapacity AS
+SELECT H.HID,
+       H.name AS hotel_name,
+       SUM(
+         CASE 
+           WHEN R.capacity = 'single' THEN 1
+           WHEN R.capacity = 'double' THEN 2
+           WHEN R.capacity = 'suite' THEN 3
+           WHEN R.capacity = 'family' THEN 4
+           WHEN R.capacity = 'deluxe' THEN 2
+           ELSE 1
+         END
+       ) AS total_capacity
+FROM Hotel H
+JOIN Room R ON H.HID = R.hotel_id
+GROUP BY H.HID, H.name;
+Explanation:
+
+CASE Expression: Converts room capacity (a text value) into a numeric value. For instance, a 'single' room is worth 1, a 'double' 2, etc.
+Join: Associates rooms with their hotel to calculate the total capacity per hotel.
+Group By: Aggregates the total capacity for each hotel.
