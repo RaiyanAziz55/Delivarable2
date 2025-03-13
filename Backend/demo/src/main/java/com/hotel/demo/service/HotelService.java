@@ -30,9 +30,8 @@ public class HotelService {
         if (hotelOptional.isPresent()) {
             Hotel hotel = hotelOptional.get();
             hotel.setAddress(hotelDetails.getAddress());
-            hotel.setStarRating(hotelDetails.getStarRating());
+            hotel.setStarCount(hotelDetails.getStarCount()); // ✅ Use correct field
             hotel.setPhone(hotelDetails.getPhone());
-            hotel.setEmail(hotelDetails.getEmail());
             return hotelRepository.save(hotel);
         }
         return null;

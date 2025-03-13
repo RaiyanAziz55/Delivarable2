@@ -1,11 +1,12 @@
 package com.hotel.demo.controller;
 
+import com.hotel.demo.dto.BookingRequest;
 import com.hotel.demo.model.Booking;
 import com.hotel.demo.service.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.time.LocalDate;
 import java.util.Optional;
 
 @RestController
@@ -14,28 +15,22 @@ public class BookingController {
     @Autowired
     private BookingService bookingService;
 
-    @GetMapping
-    public List<Booking> getAllBookings() {
-        return bookingService.getAllBookings();
+    /**
+     * Endpoint to create a new booking.
+     */
+    @PostMapping
+    public Booking bookRoom(@RequestBody BookingRequest bookingRequest) {
+        return bookingService.createBooking(bookingRequest.getCustomer(),
+                bookingRequest.getRoomId(),
+                bookingRequest.getCheckInDate(),
+                bookingRequest.getCheckOutDate());
     }
 
+    /**
+     * Endpoint to fetch a booking by ID.
+     */
     @GetMapping("/{id}")
     public Optional<Booking> getBookingById(@PathVariable Long id) {
         return bookingService.getBookingById(id);
-    }
-
-    @GetMapping("/customer/{customerId}")
-    public List<Booking> getBookingsByCustomer(@PathVariable Long customerId) {
-        return bookingService.getBookingsByCustomer(customerId);
-    }
-
-    @PostMapping
-    public Booking createBooking(@RequestBody Booking booking) {
-        return bookingService.createBooking(booking);
-    }
-
-    @DeleteMapping("/{id}")
-    public void deleteBooking(@PathVariable Long id) {
-        bookingService.deleteBooking(id);
     }
 }

@@ -24,10 +24,6 @@ public class CustomerController {
         return customerService.getCustomerById(id);
     }
 
-    @GetMapping("/email/{email}")
-    public Customer getCustomerByEmail(@PathVariable String email) {
-        return customerService.getCustomerByEmail(email);
-    }
 
     @PostMapping
     public Customer createCustomer(@RequestBody Customer customer) {

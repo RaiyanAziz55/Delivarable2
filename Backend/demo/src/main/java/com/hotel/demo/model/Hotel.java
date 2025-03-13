@@ -3,30 +3,26 @@ package com.hotel.demo.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
-
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "Hotel")
 public class Hotel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "HID")
     private Long id;
 
+    private String name;
     private String address;
-    private int starRating;
     private String phone;
-    private String email;
+    private String category;
+
+    @Column(name = "star_count") // ✅ Correct field name
+    private int starCount;
 
     @ManyToOne
-    @JoinColumn(name = "hotel_chain_id", nullable = false)
+    @JoinColumn(name = "chain_id", nullable = false)
     private HotelChain hotelChain;
-
-    @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL)
-    private List<Room> rooms;
-
-    @OneToOne
-    @JoinColumn(name = "manager_id")
-    private Employee manager;
 }

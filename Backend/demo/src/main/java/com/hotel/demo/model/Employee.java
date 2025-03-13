@@ -7,20 +7,33 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "Employee")
 public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "emp_id")
     private Long id;
 
-    private String firstName;
-    private String lastName;
+    @Column(name = "full_name")
+    private String fullName;
+    
     private String address;
-    private String position;
-    private String email;
     private String phone;
+    private String email;
     private String password;
+    private String role;
+    private boolean manager;
 
     @ManyToOne
     @JoinColumn(name = "hotel_id", nullable = false)
     private Hotel hotel;
+
+    @Column(name = "first_name")
+    private String firstName;
+
+    @Column(name = "last_name")
+    private String lastName;
+
+    @Column(name = "position")
+    private String position;
 }

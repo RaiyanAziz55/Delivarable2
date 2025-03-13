@@ -2,21 +2,26 @@ package com.hotel.demo.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import java.time.LocalDate;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "Customer")
 public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "cust_id")
     private Long id;
 
-    private String firstName;
-    private String lastName;
+    @Column(name = "full_name")
+    private String fullName;
+    
     private String address;
-    private String idType;
-    private String idNumber;
-    private String email;
     private String phone;
+    private String email;
+
+    @Column(name = "reg_date")
+    private LocalDate registrationDate;
 }

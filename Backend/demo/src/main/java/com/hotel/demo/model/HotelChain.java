@@ -3,23 +3,21 @@ package com.hotel.demo.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
-
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "HotelChain")
 public class HotelChain {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "HCID")
     private Long id;
 
-    private String chainName;
-    private String hqAddress;
-    private String email;
+    private String name;
+    private String address;
     private String phone;
-    private int hotelCount;
 
-    @OneToMany(mappedBy = "hotelChain", cascade = CascadeType.ALL)
-    private List<Hotel> hotels;
+    @Column(name = "chain_number")
+    private String chainNumber;
 }

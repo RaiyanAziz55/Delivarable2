@@ -21,9 +21,6 @@ public class CustomerService {
         return customerRepository.findById(id);
     }
 
-    public Customer getCustomerByEmail(String email) {
-        return customerRepository.findByEmail(email);
-    }
 
     public Customer createCustomer(Customer customer) {
         return customerRepository.save(customer);
