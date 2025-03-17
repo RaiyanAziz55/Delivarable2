@@ -7,7 +7,7 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "HotelChain")
+@Table(name = "hotelchain")
 public class HotelChain {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

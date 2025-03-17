@@ -42,8 +42,9 @@ public class BookingService {
         }
 
         // Check if room exists
-        Room room = roomRepository.findById(roomId)
-                .orElseThrow(() -> new RuntimeException("Room not found"));
+        Room room = roomRepository.findByIdWithHotel(roomId)
+        .orElseThrow(() -> new RuntimeException("Room not found"));
+
 
         // Ensure room availability before booking
         boolean isAvailable = bookingRepository.isRoomAvailable(roomId, checkIn, checkOut);

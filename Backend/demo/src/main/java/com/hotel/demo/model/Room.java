@@ -22,7 +22,8 @@ public class Room {
     private boolean extended;
     private String problems;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)  // ✅ Force eager loading
     @JoinColumn(name = "hotel_id", nullable = false)
     private Hotel hotel;
 }
+

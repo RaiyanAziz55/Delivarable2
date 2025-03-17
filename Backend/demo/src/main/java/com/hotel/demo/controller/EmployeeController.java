@@ -1,12 +1,14 @@
 package com.hotel.demo.controller;
 
+import com.hotel.demo.dto.LoginRequest;
 import com.hotel.demo.model.Employee;
 import com.hotel.demo.service.EmployeeService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/employees")
@@ -14,28 +16,27 @@ public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
 
-    @GetMapping
-    public List<Employee> getAllEmployees() {
-        return employeeService.getAllEmployees();
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody LoginRequest request) {
+        String response = employeeService.login(request.getEmail(), request.getPassword());
+
+        if (response.equals("Login successful!")) {
+            return ResponseEntity.ok(response);
+        }
+        return ResponseEntity.status(401).body(response);  // Unauthorized if login fails
     }
 
-    @GetMapping("/{id}")
-    public Optional<Employee> getEmployeeById(@PathVariable Long id) {
-        return employeeService.getEmployeeById(id);
+      // ✅ Employee Registration Endpoint
+    @PostMapping("/register")
+    public ResponseEntity<Employee> register(@RequestBody Employee employee) {
+        Employee registeredEmployee = employeeService.registerEmployee(employee);
+        return ResponseEntity.ok(registeredEmployee);
     }
 
-    @GetMapping("/email/{email}")
-    public Employee getEmployeeByEmail(@PathVariable String email) {
-        return employeeService.getEmployeeByEmail(email);
-    }
-
-    @PostMapping
-    public Employee createEmployee(@RequestBody Employee employee) {
-        return employeeService.createEmployee(employee);
-    }
-
-    @DeleteMapping("/{id}")
-    public void deleteEmployee(@PathVariable Long id) {
-        employeeService.deleteEmployee(id);
+    @GetMapping("/employees")
+    public ResponseEntity<List<Employee>> getAllEmployees() {
+        System.out.println("📢 Reached getAllEmployees Controller!");
+        List<Employee> employees = employeeService.getAllEmployees();
+        return ResponseEntity.ok(employees);
     }
 }

@@ -19,6 +19,8 @@ public class Employee {
     
     private String address;
     private String phone;
+    
+    @Column(unique = true, nullable = false)
     private String email;
     private String password;
     private String role;
