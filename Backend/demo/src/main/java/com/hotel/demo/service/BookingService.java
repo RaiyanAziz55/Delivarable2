@@ -6,6 +6,8 @@ import com.hotel.demo.model.Room;
 import com.hotel.demo.repository.BookingRepository;
 import com.hotel.demo.repository.CustomerRepository;
 import com.hotel.demo.repository.RoomRepository;
+
+import java.util.List; // ✅ CORRECT List class
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -67,4 +69,32 @@ public class BookingService {
     public Optional<Booking> getBookingById(Long id) {
         return bookingRepository.findById(id);
     }
+
+    public boolean isRoomAvailable(Long roomId, LocalDate checkIn, LocalDate checkOut) {
+        List<Booking> conflicts = bookingRepository.findConflictingBookings(roomId, checkIn, checkOut);
+        return conflicts.isEmpty();
+    }
+
+    public List<Booking> getAllBookings() {
+        return bookingRepository.findAll();
+    }
+
+    public List<Booking> getBookingsByCustomerEmail(String email) {
+        return bookingRepository.findByCustomerEmailIgnoreCase(email);
+    }
+
+    public Booking updateBookingStatus(Long bookingId, String newStatus) {
+        Optional<Booking> bookingOptional = bookingRepository.findById(bookingId);
+        if (bookingOptional.isPresent()) {
+            Booking booking = bookingOptional.get();
+            booking.setStatus(newStatus);
+            return bookingRepository.save(booking);
+        } else {
+            throw new RuntimeException("Booking not found");
+        }
+    }
+    
+    
+    
+    
 }

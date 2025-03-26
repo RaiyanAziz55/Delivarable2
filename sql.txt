@@ -472,3 +472,20 @@ Explanation:
 CASE Expression: Converts room capacity (a text value) into a numeric value. For instance, a 'single' room is worth 1, a 'double' 2, etc.
 Join: Associates rooms with their hotel to calculate the total capacity per hotel.
 Group By: Aggregates the total capacity for each hotel.
+
+
+
+Creates Amenities when room is created
+CREATE OR REPLACE FUNCTION create_default_amenities()
+RETURNS TRIGGER AS $$
+BEGIN
+    INSERT INTO amenities (room_id)
+    VALUES (NEW.room_id);
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_create_amenities_after_room
+AFTER INSERT ON room
+FOR EACH ROW
+EXECUTE FUNCTION create_default_amenities();

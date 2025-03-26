@@ -1,5 +1,7 @@
 package com.hotel.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,15 +21,20 @@ public class Employee {
     
     private String address;
     private String phone;
-    
+
     @Column(unique = true, nullable = false)
     private String email;
     private String password;
     private String role;
     private boolean manager;
+    
+    @Column(name = "ssn_number")
+    private String ssnNumber;
+
 
     @ManyToOne
     @JoinColumn(name = "hotel_id", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})  // ✅ Add this
     private Hotel hotel;
 
     @Column(name = "first_name")

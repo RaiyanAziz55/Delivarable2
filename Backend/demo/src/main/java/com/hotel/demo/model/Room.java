@@ -1,5 +1,8 @@
 package com.hotel.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -7,7 +10,7 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "Room")
+@Table(name = "room")
 public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,9 +24,16 @@ public class Room {
     private String capacity;
     private boolean extended;
     private String problems;
+    @Column(name = "view")
+private String view; // Example values: "sea", "mountain", "city"
 
-    @ManyToOne(fetch = FetchType.EAGER)  // ✅ Force eager loading
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hotel_id", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})  // ✅ FIX: Add this here
     private Hotel hotel;
-}
 
+    @OneToOne(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference  // ✅ Add this annotation
+    private Amenities amenities;
+}

@@ -36,17 +36,20 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
             UserDetails userDetails = userDetailsService.loadUserByUsername(email);
             if (userDetails != null) {
-                System.out.println("🔹 Found User in Database: " + userDetails.getUsername());
-
                 UsernamePasswordAuthenticationToken authToken =
-                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                    new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
+            
                 SecurityContextHolder.getContext().setAuthentication(authToken);
                 System.out.println("✅ Authentication Successful!");
+            
+                // Add this to verify the authentication object:
+                System.out.println("🔍 Current Auth: " + SecurityContextHolder.getContext().getAuthentication());
+            
             } else {
                 System.out.println("❌ User Not Found!");
             }
+            
         } else {
             System.out.println("❌ Invalid Token or No Token Provided!");
         }

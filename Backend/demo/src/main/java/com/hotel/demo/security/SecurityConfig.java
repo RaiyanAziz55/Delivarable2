@@ -3,13 +3,13 @@ package com.hotel.demo.security;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -20,21 +20,70 @@ import java.util.List;
 public class SecurityConfig {
 
     private final JwtUtil jwtUtil;
-    private final UserDetailsService userDetailsService;
+    private final CustomUserDetailsService userDetailsService;
 
-    public SecurityConfig(JwtUtil jwtUtil, @Lazy UserDetailsService userDetailsService) { // ✅ Make UserDetailsService Lazy
+    public SecurityConfig(JwtUtil jwtUtil, @Lazy CustomUserDetailsService userDetailsService) {
         this.jwtUtil = jwtUtil;
         this.userDetailsService = userDetailsService;
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        JwtAuthFilter jwtAuthFilter = new JwtAuthFilter(jwtUtil, userDetailsService); // ✅ Manually instantiate
+        JwtAuthFilter jwtAuthFilter = new JwtAuthFilter(jwtUtil, userDetailsService);
 
         http
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/employees/register", "/employees/login").permitAll()
+            // Public access
+            .requestMatchers("/employees/login").permitAll()
+            .requestMatchers(HttpMethod.GET, "/rooms/**").permitAll()
+            .requestMatchers("/bookings/availability").permitAll()
+            .requestMatchers(HttpMethod.POST, "/bookings").permitAll()
+        
+            // Employee management (Manager only)
+            .requestMatchers(HttpMethod.POST, "/employees").hasAuthority("ROLE_Manager")
+            .requestMatchers(HttpMethod.PUT, "/employees/**").hasAuthority("ROLE_Manager")
+            .requestMatchers(HttpMethod.DELETE, "/employees/**").hasAuthority("ROLE_Manager")
+            .requestMatchers(HttpMethod.GET, "/employees").hasAuthority("ROLE_Manager")
+        
+            // Room management
+            .requestMatchers(HttpMethod.GET, "/rooms/**").permitAll()
+            .requestMatchers(HttpMethod.POST, "/rooms/search").permitAll()            
+            .requestMatchers(HttpMethod.PUT, "/rooms/{id}").hasAuthority("ROLE_Manager")
+            .requestMatchers(HttpMethod.DELETE, "/rooms/{id}").hasAuthority("ROLE_Manager")
+            .requestMatchers(HttpMethod.PUT, "/rooms/*/amenities").hasAuthority("ROLE_Manager")
+
+        
+            // Booking management
+            .requestMatchers(HttpMethod.GET, "/bookings").hasAnyAuthority("ROLE_Manager", "Employee")
+            .requestMatchers(HttpMethod.GET, "/bookings/customer/**").hasAnyAuthority("ROLE_Manager", "Employee")
+            .requestMatchers(HttpMethod.PUT, "/bookings/*/status").hasAnyAuthority("ROLE_Manager", "Employee")
+        
+            // Renting management
+            .requestMatchers(HttpMethod.POST, "/rentings").hasAnyAuthority("ROLE_Manager", "Employee")
+            .requestMatchers(HttpMethod.POST, "/rentings/from-booking").hasAnyAuthority("ROLE_Manager", "Employee")
+            .requestMatchers(HttpMethod.GET, "/rentings").hasAuthority("ROLE_Manager")
+            .requestMatchers(HttpMethod.GET, "/rentings/customer/**").hasAnyAuthority("ROLE_Manager", "Employee")
+            .requestMatchers(HttpMethod.PUT, "/rentings/*/checkout").hasAnyAuthority("ROLE_Manager", "Employee")
+        
+            // Hotel chain management (Manager only)
+            .requestMatchers(HttpMethod.GET, "/hotel-chains/**").permitAll() // Optional: restrict if needed
+            .requestMatchers(HttpMethod.POST, "/hotel-chains").hasAuthority("ROLE_Manager")
+            .requestMatchers(HttpMethod.PUT, "/hotel-chains/**").hasAuthority("ROLE_Manager")
+            .requestMatchers(HttpMethod.DELETE, "/hotel-chains/**").hasAuthority("ROLE_Manager")
+        
+            // Hotel management
+            .requestMatchers(HttpMethod.GET, "/hotels/**").permitAll()
+            .requestMatchers(HttpMethod.POST, "/hotels").hasAuthority("ROLE_Manager")
+            .requestMatchers(HttpMethod.PUT, "/hotels/**").hasAuthority("ROLE_Manager")
+            .requestMatchers(HttpMethod.DELETE, "/hotels/**").hasAuthority("ROLE_Manager")
+
+
+        
+
+
+
+
                 .anyRequest().authenticated()
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -56,13 +105,6 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager() {
         return new ProviderManager(List.of(authenticationProvider()));
     }
-    
-    @Bean
-    @Lazy  // ✅ Keep Lazy to prevent circular dependencies
-    public UserDetailsService userDetailsService(CustomUserDetailsService customUserDetailsService) {
-        return customUserDetailsService;
-    }
-    
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {

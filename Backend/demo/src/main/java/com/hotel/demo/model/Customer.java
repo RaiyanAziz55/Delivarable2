@@ -22,6 +22,9 @@ public class Customer {
     private String phone;
     private String email;
 
+    @Column(name = "id_type")
+    private String idType;
+
     @Column(name = "reg_date")
     private LocalDate registrationDate;
 }

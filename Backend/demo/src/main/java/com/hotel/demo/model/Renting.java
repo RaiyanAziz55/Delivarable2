@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -26,17 +28,21 @@ public class Renting {
 
     @ManyToOne
     @JoinColumn(name = "booking_id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Booking booking;
 
     @ManyToOne
     @JoinColumn(name = "employee_id", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Employee employee;
 
     @ManyToOne
     @JoinColumn(name = "room_id", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Room room;
 
     @ManyToOne
     @JoinColumn(name = "cust_id", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Customer customer;
 }
