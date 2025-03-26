@@ -48,7 +48,7 @@ public class SecurityConfig {
         
             // Room management
             .requestMatchers(HttpMethod.GET, "/rooms/**").permitAll()
-            .requestMatchers(HttpMethod.POST, "/rooms/search").permitAll()            
+            .requestMatchers(HttpMethod.POST, "/rooms/**").permitAll()            
             .requestMatchers(HttpMethod.PUT, "/rooms/{id}").hasAuthority("ROLE_Manager")
             .requestMatchers(HttpMethod.DELETE, "/rooms/{id}").hasAuthority("ROLE_Manager")
             .requestMatchers(HttpMethod.PUT, "/rooms/*/amenities").hasAuthority("ROLE_Manager")
