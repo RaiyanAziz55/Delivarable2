@@ -159,26 +159,6 @@ CREATE TABLE Renting (
         ON DELETE SET NULL
 );
 
--- 9. Trigger Function to Update Hotel's Manager
-CREATE OR REPLACE FUNCTION public.update_hotel_manager()
-RETURNS trigger
-LANGUAGE plpgsql
-AS $$
-BEGIN
-    UPDATE Hotel
-    SET manager_id = NEW.emp_id
-    WHERE HID = NEW.hotel_id;
-    RETURN NEW;
-END;
-$$;
-
--- 10. Trigger to Call update_hotel_manager when an Employee marked as a manager is inserted/updated
-CREATE TRIGGER trg_update_hotel_manager
-AFTER INSERT OR UPDATE ON Employee
-FOR EACH ROW
-WHEN (NEW.manager = true)
-EXECUTE FUNCTION public.update_hotel_manager();
-
 
 
 INSERT INTO Renting (booking_id, date_in, date_out, payment, employee_id, room_id, cust_id)
@@ -298,8 +278,6 @@ Query 1: Aggregation Query – Count of Rooms per Hotel
 
 This query shows the total number of rooms for each hotel. It joins the Hotel and Room tables and groups by hotel name.
 
-sql
-Copy
 SELECT H.name AS hotel_name, COUNT(R.room_id) AS total_rooms
 FROM Hotel H
 LEFT JOIN Room R ON H.HID = R.hotel_id
@@ -398,12 +376,45 @@ FOR EACH ROW
 WHEN (NEW.status = 'checked_in')
 EXECUTE FUNCTION booking_to_renting();
 
+Trigger 3: Function to Update Hotel's Manager
+CREATE OR REPLACE FUNCTION public.update_hotel_manager()
+RETURNS trigger
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    UPDATE Hotel
+    SET manager_id = NEW.emp_id
+    WHERE HID = NEW.hotel_id;
+    RETURN NEW;
+END;
+$$;
+
+-- 10. Trigger to Call update_hotel_manager when an Employee marked as a manager is inserted/updated
+CREATE TRIGGER trg_update_hotel_manager
+AFTER INSERT OR UPDATE ON Employee
+FOR EACH ROW
+WHEN (NEW.manager = true)
+EXECUTE FUNCTION public.update_hotel_manager();
+
+Creates Amenities when room is created
+CREATE OR REPLACE FUNCTION create_default_amenities()
+RETURNS TRIGGER AS $$
+BEGIN
+    INSERT INTO amenities (room_id)
+    VALUES (NEW.room_id);
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_create_amenities_after_room
+AFTER INSERT ON room
+FOR EACH ROW
+EXECUTE FUNCTION create_default_amenities();
+
 
 2. Index on Booking for Room Date Ranges
 Create an index on the Booking table on the room_id, check_in_date, and check_out_date columns:
 
-sql
-Copy
 CREATE INDEX idx_booking_room_dates
 ON Booking (room_id, check_in_date, check_out_date);
 Justification:
@@ -414,8 +425,6 @@ Expected Usage: This index is especially useful in the trigger function that pre
 3. Index on Room for Hotel Lookups
 Create an index on the Room table on the hotel_id column:
 
-sql
-Copy
 CREATE INDEX idx_room_hotel_id
 ON Room (hotel_id);
 Justification:
@@ -428,8 +437,6 @@ Expected Usage: This index helps speed up these join operations, ensuring that q
 View 1: Available Rooms per Area
 This view calculates the number of rooms that are available today (i.e., not currently booked) grouped by the hotel's address (which we treat as the "area"). It joins the Hotel and Room tables, then excludes rooms with active bookings on the current date.
 
-sql
-Copy
 CREATE VIEW AvailableRoomsPerArea AS
 SELECT H.address AS area,
        COUNT(R.room_id) AS available_rooms
@@ -449,8 +456,6 @@ Group By: Aggregates the count of available rooms per area.
 View 2: Aggregated Capacity per Hotel
 This view sums a numeric representation of the room capacity for each hotel. Since the capacity column is stored as text (e.g., 'single', 'double', etc.), we use a CASE expression to map each capacity type to a numeric value. (You may adjust the mapping according to your project's requirements.)
 
-sql
-Copy
 CREATE VIEW HotelTotalCapacity AS
 SELECT H.HID,
        H.name AS hotel_name,
@@ -473,19 +478,3 @@ CASE Expression: Converts room capacity (a text value) into a numeric value. For
 Join: Associates rooms with their hotel to calculate the total capacity per hotel.
 Group By: Aggregates the total capacity for each hotel.
 
-
-
-Creates Amenities when room is created
-CREATE OR REPLACE FUNCTION create_default_amenities()
-RETURNS TRIGGER AS $$
-BEGIN
-    INSERT INTO amenities (room_id)
-    VALUES (NEW.room_id);
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER trg_create_amenities_after_room
-AFTER INSERT ON room
-FOR EACH ROW
-EXECUTE FUNCTION create_default_amenities();
