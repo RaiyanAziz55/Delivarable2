@@ -5,7 +5,9 @@ import api from '../api/axios';
 interface User {
   id: number;
   email: string;
-  role: 'customer' | 'employee' | 'manager';
+  ROLE: 'customer' | 'Employee' | 'Manager';
+  hotelId?: number;    // New: the associated hotel ID
+  employeeId?: number; // New: the employee's ID
 }
 
 interface AuthContextType {
@@ -31,15 +33,27 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const login = async (email: string, password: string) => {
     try {
       const response = await api.post('/employees/login', { email, password });
-      const { token: jwtToken, user: userData } = response.data;
+      // Destructure the new fields from the response
+      const { token: jwtToken, employeeId, hotelId, ROLE } = response.data;
       localStorage.setItem('token', jwtToken);
       setToken(jwtToken);
+  
+      // Construct a User object using the new fields
+      const userData: User = {
+        id: employeeId,      // Use employeeId as the unique id
+        email: email,        // The email provided during login
+        ROLE: ROLE,    // Default role; adjust if needed
+        hotelId: hotelId,
+        employeeId: employeeId,
+      };
+  
       setUser(userData);
     } catch (error) {
       console.error('Login failed', error);
       throw error;
     }
   };
+  
 
   const logout = () => {
     localStorage.removeItem('token');

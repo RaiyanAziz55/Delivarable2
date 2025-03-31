@@ -3,7 +3,7 @@ import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
 interface ProtectedRouteProps {
-  requiredRole?: 'employee' | 'manager';
+  requiredRole?: 'Employee' | 'Manager';
 }
 
 const ProtectedRoute = ({ requiredRole }: ProtectedRouteProps) => {
@@ -13,7 +13,7 @@ const ProtectedRoute = ({ requiredRole }: ProtectedRouteProps) => {
     return <Navigate to="/login" replace />;
   }
 
-  if (requiredRole && user.role !== requiredRole) {
+  if (requiredRole && user.ROLE !== requiredRole) {
     // Redirect or show an unauthorized message if role requirements are not met
     return <Navigate to="/dashboard" replace />;
   }

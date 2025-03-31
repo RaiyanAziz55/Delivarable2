@@ -1,9 +1,11 @@
 // src/App.tsx
 import React from 'react';
+import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
+import Home from './pages/Home';
 import Login from './pages/Login';
-import Dashboard from './pages/Dashboard';
+import Dashboard from './pages/dashboard/Dashboard';
 import RoomSearch from './pages/RoomSearch';
 import RoomBooking from './pages/RoomBooking';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -17,6 +19,7 @@ const App: React.FC = () => {
         <Routes>
           {/* Public Routes */}
           <Route element={<PublicLayout />}>
+            <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/rooms" element={<RoomSearch />} />
             <Route path="/booking" element={<RoomBooking />} />
