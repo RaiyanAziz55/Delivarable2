@@ -71,6 +71,12 @@ public ResponseEntity<?> updateBookingStatus(
     }
 }
 
+@GetMapping("/hotel/{hotelId}")
+public ResponseEntity<List<Booking>> getBookingsByHotel(@PathVariable Long hotelId) {
+    return ResponseEntity.ok(bookingService.getBookingsByHotelId(hotelId));
+}
+
+
 
 
 

@@ -38,6 +38,10 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     List<Booking> findByCustomerEmailIgnoreCase(String email);
 
+   @Query("SELECT b FROM Booking b WHERE b.room.hotel.id = :hotelId")
+   List<Booking> findAllByHotelId(@Param("hotelId") Long hotelId);
+
+
 
 
 }

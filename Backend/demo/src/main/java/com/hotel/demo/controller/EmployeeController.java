@@ -1,6 +1,7 @@
 package com.hotel.demo.controller;
 
 import com.hotel.demo.dto.LoginRequest;
+import com.hotel.demo.dto.LoginResponse;
 import com.hotel.demo.model.Employee;
 import com.hotel.demo.service.EmployeeService;
 
@@ -19,14 +20,15 @@ public class EmployeeController {
 
     // ✅ Employee Login
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginRequest request) {
-        String token = employeeService.login(request.getEmail(), request.getPassword());
+public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+    LoginResponse response = employeeService.login(request.getEmail(), request.getPassword());
 
-        if (token != null) {
-            return ResponseEntity.ok(token);
-        }
-        return ResponseEntity.status(401).body("Invalid email or password");
+    if (response != null) {
+        return ResponseEntity.ok(response);
     }
+    return ResponseEntity.status(401).body("Invalid email or password");
+}
+
 
     // ✅ Create Employee (Manager Only)
     @PostMapping

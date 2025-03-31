@@ -93,6 +93,11 @@ public class BookingService {
             throw new RuntimeException("Booking not found");
         }
     }
+
+    public List<Booking> getBookingsByHotelId(Long hotelId) {
+        return bookingRepository.findAllByHotelId(hotelId);
+    }
+    
     
     
     

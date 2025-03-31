@@ -3,6 +3,7 @@ package com.hotel.demo.controller;
 import com.hotel.demo.model.Hotel;
 import com.hotel.demo.service.HotelService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -38,4 +39,11 @@ public class HotelController {
     public void deleteHotel(@PathVariable Long id) {
         hotelService.deleteHotel(id);
     }
+
+    @GetMapping("/chain/{chainId}")
+    public ResponseEntity<List<Hotel>> getHotelsByChain(@PathVariable Long chainId) {
+        List<Hotel> hotels = hotelService.getHotelsByChainId(chainId);
+        return ResponseEntity.ok(hotels);
+    }
+
 }

@@ -56,6 +56,11 @@ public ResponseEntity<?> checkOut(@PathVariable Long id) {
     }
 }
 
+@GetMapping("/hotel/{hotelId}")
+public ResponseEntity<List<Renting>> getRentingsByHotelId(@PathVariable Long hotelId) {
+    return ResponseEntity.ok(rentingService.getRentingsByHotelId(hotelId));
+}
+
 
 
 

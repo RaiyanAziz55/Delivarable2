@@ -55,16 +55,16 @@ public class SecurityConfig {
 
         
             // Booking management
-            .requestMatchers(HttpMethod.GET, "/bookings").hasAnyAuthority("ROLE_Manager", "Employee")
-            .requestMatchers(HttpMethod.GET, "/bookings/customer/**").hasAnyAuthority("ROLE_Manager", "Employee")
-            .requestMatchers(HttpMethod.PUT, "/bookings/*/status").hasAnyAuthority("ROLE_Manager", "Employee")
+            .requestMatchers(HttpMethod.GET, "/bookings").hasAnyAuthority("ROLE_Manager", "ROLE_Employee")
+            .requestMatchers(HttpMethod.GET, "/bookings/customer/**").hasAnyAuthority("ROLE_Manager", "ROLE_Employee")
+            .requestMatchers(HttpMethod.PUT, "/bookings/*/status").hasAnyAuthority("ROLE_Manager", "ROLE_Employee")
         
             // Renting management
-            .requestMatchers(HttpMethod.POST, "/rentings").hasAnyAuthority("ROLE_Manager", "Employee")
-            .requestMatchers(HttpMethod.POST, "/rentings/from-booking").hasAnyAuthority("ROLE_Manager", "Employee")
+            .requestMatchers(HttpMethod.POST, "/rentings").hasAnyAuthority("ROLE_Manager", "ROLE_Employee")
+            .requestMatchers(HttpMethod.POST, "/rentings/from-booking").hasAnyAuthority("ROLE_Manager", "ROLE_Employee")
             .requestMatchers(HttpMethod.GET, "/rentings").hasAuthority("ROLE_Manager")
-            .requestMatchers(HttpMethod.GET, "/rentings/customer/**").hasAnyAuthority("ROLE_Manager", "Employee")
-            .requestMatchers(HttpMethod.PUT, "/rentings/*/checkout").hasAnyAuthority("ROLE_Manager", "Employee")
+            .requestMatchers(HttpMethod.GET, "/rentings/customer/**").hasAnyAuthority("ROLE_Manager", "ROLE_Employee")
+            .requestMatchers(HttpMethod.PUT, "/rentings/*/checkout").hasAnyAuthority("ROLE_Manager", "ROLE_Employee")
         
             // Hotel chain management (Manager only)
             .requestMatchers(HttpMethod.GET, "/hotel-chains/**").permitAll() // Optional: restrict if needed
@@ -77,6 +77,10 @@ public class SecurityConfig {
             .requestMatchers(HttpMethod.POST, "/hotels").hasAuthority("ROLE_Manager")
             .requestMatchers(HttpMethod.PUT, "/hotels/**").hasAuthority("ROLE_Manager")
             .requestMatchers(HttpMethod.DELETE, "/hotels/**").hasAuthority("ROLE_Manager")
+
+            .requestMatchers(HttpMethod.GET, "/hotels/chain/**").permitAll()
+            .requestMatchers(HttpMethod.GET, "/bookings/hotel/**").hasAnyAuthority("ROLE_Manager", "ROLE_Employee")
+
 
 
         

@@ -1,5 +1,6 @@
 package com.hotel.demo.service;
 
+import com.hotel.demo.dto.LoginResponse;
 import com.hotel.demo.model.Employee;
 import com.hotel.demo.repository.EmployeeRepository;
 import com.hotel.demo.security.JwtUtil;
@@ -73,19 +74,25 @@ public class EmployeeService {
     }
 
     // ✅ Employee Login
-    public String login(String email, String password) {
-        Optional<Employee> employeeOptional = employeeRepository.findByEmail(email);
+public LoginResponse login(String email, String password) {
+    Optional<Employee> employeeOptional = employeeRepository.findByEmail(email);
 
-        if (employeeOptional.isPresent()) {
-            Employee employee = employeeOptional.get();
-            if (passwordEncoder.matches(password, employee.getPassword())) {
-                return jwtUtil.generateToken(email);
-            }
+    if (employeeOptional.isPresent()) {
+        Employee employee = employeeOptional.get();
+        if (passwordEncoder.matches(password, employee.getPassword())) {
+            String token = jwtUtil.generateToken(email);
+            return new LoginResponse(token, employee.getId(), employee.getHotel().getId(), employee.getRole());
         }
-        return null;
     }
+    return null;
+}
 
     public List<Employee> getAllEmployees() {
         return employeeRepository.findAll();
     }
+
+    public Optional<Employee> getByEmail(String email) {
+        return employeeRepository.findByEmail(email);
+    }
+    
 }

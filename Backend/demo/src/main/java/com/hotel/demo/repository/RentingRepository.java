@@ -18,5 +18,9 @@ public interface RentingRepository extends JpaRepository<Renting, Long> {
 
     List<Renting> findByCustomerEmailIgnoreCase(String email);
 
+    @Query("SELECT r FROM Renting r WHERE r.room.hotel.id = :hotelId")
+    List<Renting> findByHotelId(@Param("hotelId") Long hotelId);
+
+
 
 }

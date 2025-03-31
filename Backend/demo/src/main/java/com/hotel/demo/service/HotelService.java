@@ -40,4 +40,9 @@ public class HotelService {
     public void deleteHotel(Long id) {
         hotelRepository.deleteById(id);
     }
+
+    public List<Hotel> getHotelsByChainId(Long chainId) {
+    return hotelRepository.findByHotelChain_Id(chainId);
+}
+
 }

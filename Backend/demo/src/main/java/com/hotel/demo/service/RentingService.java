@@ -120,6 +120,11 @@ public Renting checkOut(Long rentingId) {
     return rentingRepository.save(renting);
 }
 
+public List<Renting> getRentingsByHotelId(Long hotelId) {
+    return rentingRepository.findByHotelId(hotelId);
+}
+
+
 
 
 
