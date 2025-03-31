@@ -1,5 +1,5 @@
 // src/pages/Dashboard.tsx
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import BookingsPage from './BookingsPage';
 import RentingsPage from './RentingsPage';
@@ -11,6 +11,9 @@ const Dashboard: React.FC = () => {
 
   const isManager = user?.ROLE === 'Manager';
 
+  useEffect(() => {
+    console.log("✅ Logged in user:", user);
+  }, [user]);
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center p-4">
       <div className="w-full max-w-4xl bg-white shadow-lg rounded-lg p-6">

@@ -8,6 +8,7 @@ interface Employee {
   fullName: string;
   email: string;
   role: string;
+  
   // Add other fields as needed
 }
 
@@ -22,6 +23,7 @@ const EmployeesPage: React.FC = () => {
     fullName: '',
     email: '',
     role: 'Employee',
+    password: '', // ✅ add this line
   });
   const [creating, setCreating] = useState<boolean>(false);
 
@@ -59,7 +61,7 @@ const EmployeesPage: React.FC = () => {
       .then(response => {
         // Append new employee to the list
         setEmployees(prev => [...prev, response.data]);
-        setNewEmployee({ fullName: '', email: '', role: 'Employee' });
+        setNewEmployee({ fullName: '', email: '', role: 'Employee', password: '' });
         setCreating(false);
       })
       .catch(() => {
@@ -123,6 +125,16 @@ const EmployeesPage: React.FC = () => {
           className="w-full border border-gray-300 p-2 rounded"
           required
         />
+      <input
+      type="password"
+      name="password"
+      placeholder="Password"
+      value={newEmployee.password}
+      onChange={handleInputChange}
+      className="w-full border border-gray-300 p-2 rounded"
+      required
+    />
+
         <select
           name="role"
           value={newEmployee.role}

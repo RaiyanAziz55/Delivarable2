@@ -73,7 +73,7 @@ const RoomSearch: React.FC = () => {
     setLoading(true);
     // Assuming an endpoint like /hotels/hotel-chain/{chainId}
     api
-      .get(`/hotels/hotel-chain/${chain.id}`)
+      .get(`/hotels/chain/${chain.id}`)
       .then((response) => {
         setHotels(response.data);
         setLoading(false);
@@ -93,12 +93,14 @@ const RoomSearch: React.FC = () => {
       .get(`/rooms/hotel/${hotel.id}`)
       .then((response) => {
         setRooms(response.data);
+        console.log(response.data)
         setLoading(false);
       })
       .catch((err) => {
         setError('Error fetching rooms');
         setLoading(false);
       });
+
   };
 
   // Back navigation: if we're viewing rooms, go back to hotels; if hotels, go back to chains.

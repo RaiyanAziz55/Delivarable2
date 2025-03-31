@@ -32,6 +32,7 @@ public class SecurityConfig {
         JwtAuthFilter jwtAuthFilter = new JwtAuthFilter(jwtUtil, userDetailsService);
 
         http
+            .cors(cors -> cors.configure(http)) // Enable CORS with default settings
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
             // Public access

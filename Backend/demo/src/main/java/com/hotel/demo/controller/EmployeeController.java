@@ -58,4 +58,11 @@ public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         System.out.println("📢 Reached getAllEmployees Controller!");
         return ResponseEntity.ok(employeeService.getAllEmployees());
     }
+
+    @GetMapping("/hotel/{hotelId}")
+public ResponseEntity<List<Employee>> getEmployeesByHotel(@PathVariable Long hotelId) {
+    List<Employee> employees = employeeService.getEmployeesByHotelId(hotelId);
+    return ResponseEntity.ok(employees);
+}
+
 }

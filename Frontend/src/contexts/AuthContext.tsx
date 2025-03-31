@@ -34,7 +34,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       const response = await api.post('/employees/login', { email, password });
       // Destructure the new fields from the response
-      const { token: jwtToken, employeeId, hotelId, ROLE } = response.data;
+      const { token: jwtToken, employeeId, hotelId, role } = response.data;
+      console.log(response.data)
       localStorage.setItem('token', jwtToken);
       setToken(jwtToken);
   
@@ -42,7 +43,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const userData: User = {
         id: employeeId,      // Use employeeId as the unique id
         email: email,        // The email provided during login
-        ROLE: ROLE,    // Default role; adjust if needed
+        ROLE: role,    // Default role; adjust if needed
         hotelId: hotelId,
         employeeId: employeeId,
       };

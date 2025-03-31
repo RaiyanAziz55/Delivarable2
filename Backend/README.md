@@ -296,15 +296,18 @@ LEFT JOIN Room R ON H.HID = R.hotel_id
 GROUP BY H.name;
 ```
 
-Query 2: Nested Query – List Customers Without Any Bookings
+Query 2: Nested Query – lists the names and addresses of hotels that currently have no bookings
 
-This query retrieves the names and emails of customers who have not made any bookings.
+Nested query that lists the names and addresses of hotels that currently have no bookings
 ```
-SELECT full_name, email
-FROM Customer
-WHERE cust_id NOT IN (
-    SELECT cust_id FROM Booking
+SELECT H.name, H.address
+FROM Hotel H
+WHERE H.hid NOT IN (
+    SELECT R.hotel_id
+    FROM Room R
+    JOIN Booking B ON h.hid = B.room_id
 );
+
 ```
 Query 3: Nested Query with Joins – Retrieve Bookings for a Specific Hotel Chain
 

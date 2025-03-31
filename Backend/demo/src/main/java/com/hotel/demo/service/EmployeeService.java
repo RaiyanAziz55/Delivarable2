@@ -94,5 +94,10 @@ public LoginResponse login(String email, String password) {
     public Optional<Employee> getByEmail(String email) {
         return employeeRepository.findByEmail(email);
     }
+
+    public List<Employee> getEmployeesByHotelId(Long hotelId) {
+        return employeeRepository.findByHotelId(hotelId);
+    }
+    
     
 }

@@ -3,12 +3,41 @@ import React, { useEffect, useState } from 'react';
 import api from '../../api/axios';
 import { useAuth } from '../../contexts/AuthContext';
 
+interface Booking {
+  id: number;
+  bookingDate: string;
+  checkInDate: string;
+  checkOutDate: string;
+  status: string;
+  room: {
+    id: number;
+    roomNumber: string;
+    price: number;
+    capacity: string;
+    extended: boolean;
+    // Add more if needed
+  };
+  customer: {
+    id: number;
+    fullName: string;
+    address: string;
+    phone: string;
+    email: string;
+    // Add more if needed
+  };
+  employee: {
+    id: number;
+    fullName: string;
+    email: string;
+  } | null;
+}
+
 interface Renting {
   id: number;
   dateIn: string; // Assume ISO string after parsing
   dateOut: string;
   payment: number;
-  booking: number | null;
+  booking: Booking | null;
 }
 
 const RentingsPage: React.FC = () => {
@@ -46,6 +75,7 @@ const RentingsPage: React.FC = () => {
       api.get(`/rentings/hotel/${user.hotelId}`)
         .then(response => {
           setRentings(response.data);
+          console.log(response.data)
           setLoading(false);
         })
         .catch(() => {
@@ -143,7 +173,7 @@ const RentingsPage: React.FC = () => {
             <p><strong>Date In:</strong> {renting.dateIn}</p>
             <p><strong>Date Out:</strong> {renting.dateOut}</p>
             <p><strong>Payment:</strong> ${renting.payment}</p>
-            <p><strong>Booking:</strong> {renting.booking ?? 'N/A'}</p>
+            <p><strong>Booking:</strong> {renting.booking?.id ?? 'N/A'}</p>
           </li>
         ))}
       </ul>
